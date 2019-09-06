@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rest.model.Auditorium;
+import com.rest.model.Course;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -21,13 +21,13 @@ import static org.hamcrest.Matchers.*;
 @SpringBootTest
 @AutoConfigureMockMvc
 @RunWith(SpringRunner.class)
-public class AuditoriumControllerTest {
-
+public class CourseControllerTest {
+	
 	@Autowired
 	private MockMvc mockMvc;
-
+	
 	@Autowired
-	private AuditoriumController controller;
+	private CourseController controller;
 
 	@Before
 	public void init() {
@@ -35,78 +35,87 @@ public class AuditoriumControllerTest {
 	}
 
 	@Test
-	public void getAuditoriums() throws Exception {
-		mockMvc.perform(get("/auditoriums")).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+	public void getCourses() throws Exception {
+		mockMvc.perform(get("/courses")).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(3)))
-				.andExpect(jsonPath("$[0].name").value("A1")).andExpect(jsonPath("$[1].name").value("A3"))
-				.andExpect(jsonPath("$[2].name").value("A2"));
+				.andExpect(jsonPath("$[0].name").value("Bismark"))
+				.andExpect(jsonPath("$[1].name").value("Primates"))
+				.andExpect(jsonPath("$[2].name").value("Calculus"));
 	}
 
 	@Test
 	public void getOne() throws Exception {
-		mockMvc.perform(get("/auditorium/1")).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.name").value("A1"));
+		mockMvc.perform(get("/course/1")).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.name").value("Calculus"));
 	}
 
 	@Test
 	public void create() throws Exception {
 		//Given
-		Auditorium a = new Auditorium();
-		a.setName("testAuditorium");
-		a.setCapacity(100);
+		Course a = new Course();
+		a.setName("testCourse");
+		a.setNumberOfWeeks(5);
+		a.setDescription("description");
 
 		ObjectMapper mapper = new ObjectMapper();
 		String s = mapper.writeValueAsString(a);
 
 		//Then
 		mockMvc.perform(
-				MockMvcRequestBuilders.post("/auditorium").contentType(MediaType.APPLICATION_JSON_UTF8).content(s))
-				.andExpect(status().isCreated())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(jsonPath("$.name").value("testAuditorium"));
+				MockMvcRequestBuilders.post("/course").contentType(MediaType.APPLICATION_JSON_UTF8).content(s))
+				.andExpect(status().isCreated()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(jsonPath("$.name").value("testCourse"))
+				.andExpect(jsonPath("$.numberOfWeeks").value(5))
+				.andExpect(jsonPath("$.description").value("description"));
 	}
 
 	@Test
 	public void update() throws Exception {
 		//Given
-		Auditorium a = new Auditorium();
-		a.setName("testAuditorium");
-		a.setCapacity(100);
+		Course a = new Course();
+		a.setName("testCourse");
+		a.setNumberOfWeeks(5);
+		a.setDescription("description");
 
 		ObjectMapper mapper = new ObjectMapper();
 		String s = mapper.writeValueAsString(a);
 
 		//When
 		mockMvc.perform(
-				MockMvcRequestBuilders.post("/auditorium").contentType(MediaType.APPLICATION_JSON_UTF8).content(s));
+				MockMvcRequestBuilders.post("/course").contentType(MediaType.APPLICATION_JSON_UTF8).content(s));
 		
 		a.setName("newName");
+		a.setNumberOfWeeks(3);
+		a.setDescription("newDescription");
 		s = mapper.writeValueAsString(a);
 
 		//Then
 		mockMvc.perform(
-				MockMvcRequestBuilders.put("/auditorium").contentType(MediaType.APPLICATION_JSON_UTF8).content(s))
+				MockMvcRequestBuilders.put("/course").contentType(MediaType.APPLICATION_JSON_UTF8).content(s))
 				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(jsonPath("$.name").value("newName"));
+				.andExpect(jsonPath("$.name").value("newName"))
+				.andExpect(jsonPath("$.numberOfWeeks").value(3))
+				.andExpect(jsonPath("$.description").value("newDescription"));
 	}
 	
 	@Test
 	public void delete() throws Exception {
 		//Given
-		Auditorium a = new Auditorium();
-		a.setName("testAuditorium");
-		a.setCapacity(100);
+		Course a = new Course();
+		a.setName("testCourse");
+		a.setNumberOfWeeks(5);
+		a.setDescription("description");
 
 		ObjectMapper mapper = new ObjectMapper();
 		String s = mapper.writeValueAsString(a);
 
 		//When
 		mockMvc.perform(
-				MockMvcRequestBuilders.post("/auditorium").contentType(MediaType.APPLICATION_JSON_UTF8).content(s));
+				MockMvcRequestBuilders.post("/course").contentType(MediaType.APPLICATION_JSON_UTF8).content(s));
 		
 		Integer idToDelete = controller.findTestEntry().getId();
 		
 		//Then
-		mockMvc.perform(MockMvcRequestBuilders.delete("/auditorium/{id}", idToDelete)).andExpect(status().isNoContent());
+		mockMvc.perform(MockMvcRequestBuilders.delete("/course/{id}", idToDelete)).andExpect(status().isNoContent());
 	}
 }
