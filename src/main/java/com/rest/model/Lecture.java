@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name = "LECTURES")
 public class Lecture {
@@ -37,6 +39,7 @@ public class Lecture {
 	private Group group;
 	
 	@Column
+	@JsonFormat(pattern = "HH:mm")
 	private LocalTime time;
 
 	public Integer getId() {

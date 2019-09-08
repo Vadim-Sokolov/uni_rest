@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rest.dao.LectureDao;
+import com.rest.model.Lecture;
 import com.rest.model.Lecture;
 
 @RestController
@@ -53,5 +55,15 @@ public class LectureController {
 		String deletedInfo = "Deleted " + lecture.toString();
 		lectureDao.delete(lecture);
 		return deletedInfo;
+	}
+	
+	@RequestMapping("lecture/clearTest")
+	public void clearTestEntries() {
+		lectureDao.removeTestEntries();
+	}
+	
+	@RequestMapping("lecture/findTestEntry")
+	public Lecture findTestEntry() {
+		return lectureDao.findTestEntry();
 	}
 }

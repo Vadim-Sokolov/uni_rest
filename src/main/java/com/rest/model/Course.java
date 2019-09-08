@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 @Table(name = "COURSES")
 public class Course {
@@ -14,15 +16,19 @@ public class Course {
 	@Id 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
+	@JsonProperty("id")
     private Integer id;
 	
 	@Column(name = "name")
+	@JsonProperty("name")
     private String name;
 	
 	@Column(name = "number_of_weeks")
+	@JsonProperty("numberOfWeeks")
     private Integer numberOfWeeks;
 	
 	@Column(name = "description")
+	@JsonProperty("description")
     private String description;
 
     public String getName() {
