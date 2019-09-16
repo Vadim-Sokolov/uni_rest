@@ -1,6 +1,7 @@
 package com.rest.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -34,6 +35,9 @@ public class Group {
 	
 	@Column(name = "group_name")
     private String name;
+	
+	@OneToMany(mappedBy = "group")
+    private Collection<Student> students;
     
     public Integer getId() {
         return id;
@@ -59,7 +63,15 @@ public class Group {
         this.name = name;
     }
 
-    @Override
+    public Collection<Student> getStudents() {
+		return students;
+	}
+
+	public void setStudents(Collection<Student> students) {
+		this.students = students;
+	}
+
+	@Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<title>fetch</title>
+</head>
+
+<body>
+	<button id="getAuditoriums">Get Auditoriums</button>
+	<hr>
+	<div id="output"></div>
+
+	<form id="addAuditorium">
+		<div>
+			<input type="text" id="name" placeholder="Name">
+		</div>
+		<div>
+			<input type="text" id="capacity" placeholder="Capacity">
+		</div>
+		<input type="submit" value="Submit">
+	</form>
+	<script>
+
+    document.getElementById('getAuditoriums')
+    .addEventListener('click', getAuditoriums);
+    
+    document.getElementById('addAuditorium')
+    .addEventListener('submit', addAuditorium);
+
+    function getAuditoriums() {
+        fetch('http://localhost:8080/auditoriums')
+        .then((res) => res.json())
+        .then((data) => {
+          let output = '<h2>Auditoriums</h2>';
+          data.forEach(auditorium => {
+             output += `
+             <ul>
+             <li>ID: ${auditorium.id}</li>
+             <li>Name: ${auditorium.name}</li>
+             <li>Capacity: ${auditorium.capacity}</li>
+             </ul>
+             `;
+          });
+          document.getElementById('output').innerHTML = output;
+        })
+    }
+    
+    function addPost(e) {
+        e.preventDefault();
+        let name = document.getElementById('name').value;
+        let capacity = document.getElementById('capacity').value;
+
+        fetch('http://localhost:8080/auditorium', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-type': 'application/json'
+          },
+          body: JSON.stringify({ name: name, capacity: capacity })
+        })
+          .then((res) => res.json())
+          .then((data) => console.log(data))
+      }
+    
+    </script>
+</body>
+</html>
