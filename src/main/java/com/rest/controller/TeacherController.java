@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rest.dao.FacultyDao;
 import com.rest.dao.TeacherDao;
-import com.rest.model.Teacher;
 import com.rest.model.Teacher;
 
 @RestController
@@ -24,16 +24,22 @@ public class TeacherController {
 
 	@Autowired
 	private TeacherDao teacherDao;
+	@Autowired
+	private FacultyDao facultyDao; 
 
-	@PostMapping("/teacher")
+	@PostMapping("/teacher/faculty/{facultyId}")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Teacher addTeacher(@RequestBody Teacher teacher) {
+	public Teacher addTeacher(@RequestBody Teacher teacher, @PathVariable("facultyId") int facultyId) {
+		teacher.setFaculty(facultyDao.findById(facultyId).get());
 		teacherDao.save(teacher);
 		return teacher;
 	}
 
-	@PutMapping("/teacher")
-	public Teacher updateTeacher(@RequestBody Teacher teacher) {
+	@PutMapping("/teacher/{teacherId}/faculty/{facultyId}")
+	public Teacher updateTeacher(@RequestBody Teacher teacher,
+			@PathVariable("teacherId") int teacherId, @PathVariable("facultyId") int facultyId) {
+		teacher.setId(teacherId);
+		teacher.setFaculty(facultyDao.findById(facultyId).get());
 		teacherDao.save(teacher);
 		return teacher;
 	}

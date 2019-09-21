@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<title>fetch</title>
+</head>
+
+<body>
+	<button id="getStudents">Get Students</button>
+	<hr>
+	<div id="students"></div>
+
+	<h1 style="font-size: 20px">CREATE</h1>
+	<form id="addStudent">
+		<div>
+			<input type="text" id="firstName" placeholder="First Name">
+		</div>
+		<div>
+			<input type="text" id="lastName" placeholder="Last Name">
+		</div>
+		<div>
+			<input type="text" id="groupId" placeholder="Group ID">
+		</div>
+		<div>
+			<input type="text" id="cardNumber" placeholder="Card Number">
+		</div>
+		<input type="submit" value="Submit">
+	</form>
+
+	<h2 style="font-size: 20px">UPDATE</h2>
+	<form id="updateStudent">
+		<div>
+			<input type="text" id="idForUpdate" placeholder="ID">
+		</div>
+		<div>
+			<input type="text" id="firstNameForUpdate" placeholder="First Name">
+		</div>
+		<div>
+			<input type="text" id="lastNameForUpdate" placeholder="Last Name">
+		</div>
+		<div>
+			<input type="text" id="groupIdForUpdate" placeholder="Group ID">
+		</div>
+		<div>
+			<input type="text" id="cardNumberForUpdate" placeholder="Card Number">
+		</div>
+		<input type="submit" value="Submit">
+	</form>
+
+	<h3 style="font-size: 20px">FIND BY ID</h3>
+	<form id="findById">
+		<div>
+			<input type="number" id="idForSearch" placeholder="ID">
+		</div>
+		<input type="submit" value="Submit">
+	</form>
+	<div id="studentById"></div>
+
+	<h4 style="font-size: 20px">DELETE</h4>
+	<hr>
+	<form id="deleteStudent">
+		<div>
+			<input type="number" id="idForDelete" placeholder="ID">
+		</div>
+		<input type="submit" value="Submit">
+	</form>
+	<script>
+
+    document.getElementById('getStudents')
+    .addEventListener('click', getStudents);
+    
+    document.getElementById('addStudent')
+    .addEventListener('submit', addStudent);
+    
+    document.getElementById('updateStudent')
+    .addEventListener('submit', updateStudent);
+    
+    document.getElementById('deleteStudent')
+    .addEventListener('submit', deleteStudent);
+    
+    document.getElementById('findById')
+    .addEventListener('submit', findById);
+
+
+    function getStudents() {
+        fetch('http://localhost:8080/students')
+        .then((res) => res.json())
+        .then((data) => {
+          let students = '<h5 style="font-size: 20px">Students</h5>';
+          data.forEach(student => {
+             students += `
+             <ul>
+             <li>ID: ${student.id}</li>
+             <li>Name: ${student.firstName} ${student.lastName}</li>
+             <li>Card Number: ${student.studentCardNumber}</li>
+             <li>Group: ${student.group.name}</li>
+             </ul>
+             `;
+          });
+          document.getElementById('students').innerHTML = students;
+          console.log(data);
+        })
+    }
+    
+    function addStudent(e) {
+        e.preventDefault();
+        let firstName = document.getElementById('firstName').value;
+        let lastName = document.getElementById('lastName').value;
+        let cardNumber = document.getElementById('cardNumber').value;
+        let groupId = document.getElementById('groupId').value;
+        let url = "http://localhost:8080/student/group/" + groupId;
+
+        fetch(url, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-type': 'application/json'
+          },
+          body: JSON.stringify({ firstName: firstName, lastName: lastName, studentCardNumber: cardNumber })
+        })
+          .then((res) => res.json())
+          .then((data) => console.log(data))
+      }
+    
+    function updateStudent(e) {
+    	e.preventDefault();
+        let studentId = document.getElementById('idForUpdate').value;
+        let firstName = document.getElementById('firstNameForUpdate').value;
+        let lastName = document.getElementById('lastNameForUpdate').value;
+        let cardNumber = document.getElementById('cardNumberForUpdate').value;
+        let groupId = document.getElementById('groupIdForUpdate').value;
+        let url = "http://localhost:8080/student/" + studentId + "/group/" + groupId;
+
+        fetch(url, {
+          method: 'PUT',
+          headers: {
+        	  'Accept': 'application/json, text/plain, */*',
+            'Content-type': 'application/json'
+          },
+          body: JSON.stringify({firstName: firstName, lastName: lastName, studentCardNumber: cardNumber })
+        })
+          .then((res) => res.json())
+          .then((data) => console.log(data))
+      }
+    
+    function findById(e) {
+    	e.preventDefault();
+    	let thisId = document.getElementById('idForSearch').value;
+    	let url = "http://localhost:8080/student/" + thisId;
+    	
+    	fetch(url)
+        .then((res) => res.json())
+        .then((data) => {
+        	console.log(data);
+        	document.getElementById('studentById').innerHTML = 
+        		`<br><h7 style="font-size: 20px"><b>Student:</b></h7>
+                <ul>
+                <li>ID: ${data.id}</li>
+                <li>Name: ${data.firstName} ${data.lastName}</li>
+                <li>Card Number: ${data.studentCardNumber}</li>
+                <li>Group: ${data.group.name}</li>
+                </ul>
+                `;
+        })
+    }
+    
+    function deleteStudent(e) {
+    	e.preventDefault();
+        let thisId = document.getElementById('idForDelete').value;
+        let url = "http://localhost:8080/student/" + thisId;
+
+        fetch(url, {
+          method: 'DELETE',
+        })
+        console.log(thisId);
+        console.log(url);
+      }
+    
+    </script>
+</body>
+</html>

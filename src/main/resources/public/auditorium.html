@@ -8,23 +8,25 @@
 </head>
 
 <body>
-	<button id="getGroups">Get Groups</button>
+	<button id="getAuditoriums">Get Auditoriums</button>
 	<hr>
-	<div id="groups"></div>
+	<div id="auditoriums"></div>
+	<div id="auditoriumById"></div>
+	
 
 	<h1 style="font-size: 20px">CREATE</h1>
-	<form id="addGroup">
+	<form id="addAuditorium">
 		<div>
 			<input type="text" id="name" placeholder="Name">
 		</div>
 		<div>
-			<input type="text" id="facultyId" placeholder="Faculty ID">
+			<input type="text" id="capacity" placeholder="Capacity">
 		</div>
 		<input type="submit" value="Submit">
 	</form>
 
 	<h2 style="font-size: 20px">UPDATE</h2>
-	<form id="updateGroup">
+	<form id="updateAuditorium">
 		<div>
 			<input type="text" id="idForUpdate" placeholder="ID">
 		</div>
@@ -32,7 +34,7 @@
 			<input type="text" id="nameForUpdate" placeholder="Name">
 		</div>
 		<div>
-			<input type="text" id="facultyIdForUpdate" placeholder="Faculty ID">
+			<input type="text" id="capacityForUpdate" placeholder="Capacity">
 		</div>
 		<input type="submit" value="Submit">
 	</form>
@@ -44,11 +46,9 @@
 		</div>
 		<input type="submit" value="Submit">
 	</form>
-	<div id="groupById"></div>
 
 	<h4 style="font-size: 20px">DELETE</h4>
-	<hr>
-	<form id="deleteGroup">
+	<form id="deleteAuditorium">
 		<div>
 			<input type="number" id="idForDelete" placeholder="ID">
 		</div>
@@ -56,102 +56,94 @@
 	</form>
 	<script>
 
-    document.getElementById('getGroups')
-    .addEventListener('click', getGroups);
+    document.getElementById('getAuditoriums')
+    .addEventListener('click', getAuditoriums);
     
-    document.getElementById('addGroup')
-    .addEventListener('submit', addGroup);
+    document.getElementById('addAuditorium')
+    .addEventListener('submit', addAuditorium);
     
-    document.getElementById('updateGroup')
-    .addEventListener('submit', updateGroup);
+    document.getElementById('updateAuditorium')
+    .addEventListener('submit', updateAuditorium);
     
-    document.getElementById('deleteGroup')
-    .addEventListener('submit', deleteGroup);
+    document.getElementById('deleteAuditorium')
+    .addEventListener('submit', deleteAuditorium);
     
     document.getElementById('findById')
     .addEventListener('submit', findById);
 
 
-    function getGroups() {
-        fetch('http://localhost:8080/groups')
+    function getAuditoriums() {
+        fetch('http://localhost:8080/auditoriums')
         .then((res) => res.json())
         .then((data) => {
-          let groups = '<h5 style="font-size: 20px">Groups</h5>';
-          data.forEach(group => {
-             groups += `
+          let auditoriums = '<h5 style="font-size: 20px">Auditoriums</h5>';
+          data.forEach(auditorium => {
+             auditoriums += `
              <ul>
-             <li>ID: ${group.id}</li>
-             <li>Name: ${group.name}</li>
-             <li>Faculty: ${group.faculty.name}</li>
+             <li>ID: ${auditorium.id}</li>
+             <li>Name: ${auditorium.name}</li>
+             <li>Capacity: ${auditorium.capacity}</li>
              </ul>
              `;
           });
-          document.getElementById('groups').innerHTML = groups;
-          console.log(data);
+          document.getElementById('auditoriums').innerHTML = auditoriums;
         })
     }
     
-    function addGroup(e) {
+    function addAuditorium(e) {
         e.preventDefault();
         let name = document.getElementById('name').value;
-        let facultyId = document.getElementById('facultyId').value;
-        let url = "http://localhost:8080/group/faculty/" + facultyId;
-        
-        fetch(url, {
+        let capacity = document.getElementById('capacity').value;
+
+        fetch('http://localhost:8080/auditorium', {
           method: 'POST',
           headers: {
             'Accept': 'application/json, text/plain, */*',
             'Content-type': 'application/json'
           },
-          body: JSON.stringify({ name: name })
+          body: JSON.stringify({ name: name, capacity: capacity })
         })
           .then((res) => res.json())
           .then((data) => console.log(data))
       }
     
-    function updateGroup(e) {
+    function updateAuditorium(e) {
     	e.preventDefault();
-        let id = document.getElementById('idForUpdate').value;
-        let name = document.getElementById('nameForUpdate').value;
-        let facultyId = document.getElementById('facultyIdForUpdate').value;
-        let url = "http://localhost:8080/group/faculty/" + facultyId;
+        let thisId = document.getElementById('idForUpdate').value;
+        let thisName = document.getElementById('nameForUpdate').value;
+        let thisCapacity = document.getElementById('capacityForUpdate').value;
 
-        fetch(url, {
+        fetch('http://localhost:8080/auditorium', {
           method: 'PUT',
           headers: {
         	  'Accept': 'application/json, text/plain, */*',
             'Content-type': 'application/json'
           },
-          body: JSON.stringify({id: id, name: name })
+          body: JSON.stringify({id: thisId, name: thisName, capacity: thisCapacity })
         })
           .then((res) => res.json())
           .then((data) => console.log(data))
+          console.log(thisName);
+        console.log(thisCapacity);
       }
     
     function findById(e) {
     	e.preventDefault();
     	let thisId = document.getElementById('idForSearch').value;
-    	let url = "http://localhost:8080/group/" + thisId;
+    	let url = "http://localhost:8080/auditorium/" + thisId;
     	
     	fetch(url)
         .then((res) => res.json())
         .then((data) => {
         	console.log(data);
-        	document.getElementById('groupById').innerHTML = 
-        		`<br><h7 style="font-size: 20px"><b>Group:</b></h7>
-                <ul>
-                <li>ID: ${data.id}</li>
-                <li>Name: ${data.name}</li>
-                <li>Faculty: ${data.faculty.name}</li>
-                </ul>
-                `;
+        	document.getElementById('auditoriumById').innerHTML = "Auditorium: [ID: " + data.id + ", Name: " + data.name + ", Capacity: " + data. capacity +"]";
         })
     }
     
-    function deleteGroup(e) {
+    function deleteAuditorium(e) {
     	e.preventDefault();
         let thisId = document.getElementById('idForDelete').value;
-        let url = "http://localhost:8080/group/" + thisId;
+        let url = "http://localhost:8080/auditorium/" + thisId;
 
         fetch(url, {
           method: 'DELETE',

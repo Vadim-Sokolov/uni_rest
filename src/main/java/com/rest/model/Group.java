@@ -1,24 +1,16 @@
 package com.rest.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 
 @Entity
 @Table(name = "GROUPS")
@@ -36,9 +28,6 @@ public class Group {
 	@Column(name = "group_name")
     private String name;
 	
-	@OneToMany(mappedBy = "group")
-    private Collection<Student> students;
-    
     public Integer getId() {
         return id;
     }
@@ -62,14 +51,6 @@ public class Group {
     public void setName(String name) {
         this.name = name;
     }
-
-    public Collection<Student> getStudents() {
-		return students;
-	}
-
-	public void setStudents(Collection<Student> students) {
-		this.students = students;
-	}
 
 	@Override
     public int hashCode() {

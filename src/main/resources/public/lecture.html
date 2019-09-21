@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<title>fetch</title>
+</head>
+
+<body>
+	<button id="getLectures">Get Lectures</button>
+	<hr>
+	<div id="lectures"></div>
+
+	<h1 style="font-size: 20px">CREATE</h1>
+	<form id="addLecture">
+		<div>
+			<input type="text" id="courseId" placeholder="Course ID">
+		</div>
+		<div>
+			<input type="text" id="auditoriumId" placeholder="Auditorium ID">
+		</div>
+		<div>
+			<input type="text" id="teacherId" placeholder="Teacher ID">
+		</div>
+		<div>
+			<input type="text" id="groupId" placeholder="Group ID">
+		</div>
+		<div>
+			<select id="time">
+			<option value="09:00">09:00</option>
+			<option value="10:00">10:00</option>
+			<option value="11:00">11:00</option>
+			<option value="12:00">12:00</option>
+			<option value="13:00">13:00</option>
+			<option value="14:00">14:00</option>
+			<option value="15:00">15:00</option>
+			<option value="16:00">16:00</option>
+			<option value="17:00">17:00</option>
+		</select>
+		</div>
+		<input type="submit" value="Submit">
+	</form>
+
+	<h2 style="font-size: 20px">UPDATE</h2>
+	<form id="updateLecture">
+		<div>
+			<input type="text" id="idForUpdate" placeholder="ID">
+		</div>
+		<div>
+			<input type="text" id="courseIdForUpdate" placeholder="Course ID">
+		</div>
+		<div>
+			<input type="text" id="auditoriumIdForUpdate" placeholder="Auditorium ID">
+		</div>
+		<div>
+			<input type="text" id="teacherIdForUpdate" placeholder="Teacher ID">
+		</div>
+		<div>
+			<input type="text" id="groupIdForUpdate" placeholder="Group ID">
+		</div>
+		<div>
+			<select id="timeForUpdate">
+			<option value="09:00">09:00</option>
+			<option value="10:00">10:00</option>
+			<option value="11:00">11:00</option>
+			<option value="12:00">12:00</option>
+			<option value="13:00">13:00</option>
+			<option value="14:00">14:00</option>
+			<option value="15:00">15:00</option>
+			<option value="16:00">16:00</option>
+			<option value="17:00">17:00</option>
+		</select>
+		</div>
+		<input type="submit" value="Submit">
+	</form>
+
+	<h3 style="font-size: 20px">FIND BY ID</h3>
+	<form id="findById">
+		<div>
+			<input type="number" id="idForSearch" placeholder="ID">
+		</div>
+		<input type="submit" value="Submit">
+	</form>
+	<div id="lectureById"></div>
+
+	<h4 style="font-size: 20px">DELETE</h4>
+	<hr>
+	<form id="deleteLecture">
+		<div>
+			<input type="number" id="idForDelete" placeholder="ID">
+		</div>
+		<input type="submit" value="Submit">
+	</form>
+	<script>
+
+    document.getElementById('getLectures')
+    .addEventListener('click', getLectures);
+    
+    document.getElementById('addLecture')
+    .addEventListener('submit', addLecture);
+    
+    document.getElementById('updateLecture')
+    .addEventListener('submit', updateLecture);
+    
+    document.getElementById('deleteLecture')
+    .addEventListener('submit', deleteLecture);
+    
+    document.getElementById('findById')
+    .addEventListener('submit', findById);
+
+
+    function getLectures() {
+        fetch('http://localhost:8080/lectures')
+        .then((res) => res.json())
+        .then((data) => {
+          let lectures = '<h5 style="font-size: 20px">Lectures</h5>';
+          data.forEach(lecture => {
+             lectures += `
+             <ul>
+             <li>ID: ${lecture.id}</li>
+             <li>Auditorium: ${lecture.auditorium.name}</li>
+             <li>Course: ${lecture.course.name}</li>
+             <li>Group: ${lecture.group.name}</li>
+             <li>Teacher: ${lecture.teacher.firstName} ${lecture.teacher.lastName}</li>
+             <li>Time: ${lecture.time}</li>
+             </ul>
+             `;
+          });
+          document.getElementById('lectures').innerHTML = lectures;
+          console.log(data);
+        })
+    }
+    
+    function addLecture(e) {
+        e.preventDefault();
+        let auditoriumId = document.getElementById('auditoriumId').value;
+        let courseId = document.getElementById('courseId').value;
+        let groupId = document.getElementById('groupId').value;
+        let teacherId = document.getElementById('teacherId').value;
+        let time = document.getElementById('time').value;
+        let url = "http://localhost:8080/lecture/auditorium/" + auditoriumId + "/course/" + courseId
+        + "/group/" + groupId + "/teacher/" + teacherId;
+
+        fetch(url, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-type': 'application/json'
+          },
+          body: JSON.stringify({ time: time })
+        })
+          .then((res) => res.json())
+          .then((data) => console.log(data))
+      }
+    
+    function updateLecture(e) {
+    	e.preventDefault();
+        let id = document.getElementById('idForUpdate').value;
+        let auditoriumId = document.getElementById('auditoriumIdForUpdate').value;
+        let courseId = document.getElementById('courseIdForUpdate').value;
+        let groupId = document.getElementById('groupIdForUpdate').value;
+        let teacherId = document.getElementById('teacherIdForUpdate').value;
+        let time = document.getElementById('timeForUpdate').value;
+        let url = "http://localhost:8080/lecture/auditorium/" + auditoriumId + "/course/" + courseId
+        + "/group/" + groupId + "/teacher/" + teacherId;
+
+        fetch(url, {
+          method: 'PUT',
+          headers: {
+        	  'Accept': 'application/json, text/plain, */*',
+            'Content-type': 'application/json'
+          },
+          body: JSON.stringify({id: id, time: time })
+        })
+          .then((res) => res.json())
+          .then((data) => console.log(data))
+      }
+    
+    function findById(e) {
+    	e.preventDefault();
+    	let thisId = document.getElementById('idForSearch').value;
+    	let url = "http://localhost:8080/lecture/" + thisId;
+    	
+    	fetch(url)
+        .then((res) => res.json())
+        .then((data) => {
+        	console.log(data);
+        	document.getElementById('lectureById').innerHTML = 
+        		`<br><h7 style="font-size: 20px"><b>Lecture:</b></h7>
+                <ul>
+                <li>ID: ${data.id}</li>
+                <li>Auditorium: ${data.auditorium.name}</li>
+                <li>Course: ${data.course.name}</li>
+                <li>Group: ${data.group.name}</li>
+                <li>Teacher: ${data.teacher.firstName} ${data.teacher.lastName}</li>
+                <li>Time: ${data.time}</li>
+                </ul>
+                `;
+        })
+    }
+    
+    function deleteLecture(e) {
+    	e.preventDefault();
+        let thisId = document.getElementById('idForDelete').value;
+        let url = "http://localhost:8080/lecture/" + thisId;
+
+        fetch(url, {
+          method: 'DELETE',
+        })
+        console.log(thisId);
+        console.log(url);
+      }
+    
+    </script>
+</body>
+</html>

@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rest.dao.AuditoriumDao;
+import com.rest.dao.CourseDao;
+import com.rest.dao.GroupDao;
 import com.rest.dao.LectureDao;
-import com.rest.model.Lecture;
+import com.rest.dao.TeacherDao;
 import com.rest.model.Lecture;
 
 @RestController
@@ -24,16 +27,36 @@ public class LectureController {
 
 	@Autowired
 	private LectureDao lectureDao;
+	@Autowired
+	private AuditoriumDao auditoriumDao;
+	@Autowired
+	private CourseDao courseDao;
+	@Autowired
+	private GroupDao groupDao;
+	@Autowired
+	private TeacherDao teacherDao;
 
-	@PostMapping("/lecture")
+	@PostMapping("/lecture/auditorium/{auditoriumId}/course/{courseId}/group/{groupId}/teacher/{teacherId}")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Lecture addLecture(@RequestBody Lecture lecture) {
+	public Lecture addLecture(@RequestBody Lecture lecture, @PathVariable("auditoriumId") int auditoriumId, 
+			@PathVariable("courseId") int courseId, @PathVariable("groupId") int groupId, 
+			@PathVariable("teacherId") int teacherId) {
+		lecture.setAuditorium(auditoriumDao.findById(auditoriumId).get());
+		lecture.setCourse(courseDao.findById(courseId).get());
+		lecture.setGroup(groupDao.findById(groupId).get());
+		lecture.setTeacher(teacherDao.findById(teacherId).get());
 		lectureDao.save(lecture);
 		return lecture;
 	}
 
-	@PutMapping("/lecture")
-	public Lecture updateLecture(@RequestBody Lecture lecture) {
+	@PutMapping("/lecture/auditorium/{auditoriumId}/course/{courseId}/group/{groupId}/teacher/{teacherId}")
+	public Lecture updateLecture(@RequestBody Lecture lecture, @PathVariable("auditoriumId") int auditoriumId, 
+			@PathVariable("courseId") int courseId, @PathVariable("groupId") int groupId, 
+			@PathVariable("teacherId") int teacherId) {
+		lecture.setAuditorium(auditoriumDao.findById(auditoriumId).get());
+		lecture.setCourse(courseDao.findById(courseId).get());
+		lecture.setGroup(groupDao.findById(groupId).get());
+		lecture.setTeacher(teacherDao.findById(teacherId).get());
 		lectureDao.save(lecture);
 		return lecture;
 	}

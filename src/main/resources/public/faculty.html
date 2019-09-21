@@ -8,31 +8,25 @@
 </head>
 
 <body>
-	<button id="getGroups">Get Groups</button>
+	<button id="getFaculties">Get Faculties</button>
 	<hr>
-	<div id="groups"></div>
+	<div id="faculties"></div>
 
 	<h1 style="font-size: 20px">CREATE</h1>
-	<form id="addGroup">
+	<form id="addFaculty">
 		<div>
 			<input type="text" id="name" placeholder="Name">
-		</div>
-		<div>
-			<input type="text" id="facultyId" placeholder="Faculty ID">
 		</div>
 		<input type="submit" value="Submit">
 	</form>
 
 	<h2 style="font-size: 20px">UPDATE</h2>
-	<form id="updateGroup">
+	<form id="updateFaculty">
 		<div>
 			<input type="text" id="idForUpdate" placeholder="ID">
 		</div>
 		<div>
 			<input type="text" id="nameForUpdate" placeholder="Name">
-		</div>
-		<div>
-			<input type="text" id="facultyIdForUpdate" placeholder="Faculty ID">
 		</div>
 		<input type="submit" value="Submit">
 	</form>
@@ -44,11 +38,11 @@
 		</div>
 		<input type="submit" value="Submit">
 	</form>
-	<div id="groupById"></div>
+	<div id="facultyById"></div>
 
 	<h4 style="font-size: 20px">DELETE</h4>
 	<hr>
-	<form id="deleteGroup">
+	<form id="deleteFaculty">
 		<div>
 			<input type="number" id="idForDelete" placeholder="ID">
 		</div>
@@ -56,48 +50,44 @@
 	</form>
 	<script>
 
-    document.getElementById('getGroups')
-    .addEventListener('click', getGroups);
+    document.getElementById('getFaculties')
+    .addEventListener('click', getFaculties);
     
-    document.getElementById('addGroup')
-    .addEventListener('submit', addGroup);
+    document.getElementById('addFaculty')
+    .addEventListener('submit', addFaculty);
     
-    document.getElementById('updateGroup')
-    .addEventListener('submit', updateGroup);
+    document.getElementById('updateFaculty')
+    .addEventListener('submit', updateFaculty);
     
-    document.getElementById('deleteGroup')
-    .addEventListener('submit', deleteGroup);
+    document.getElementById('deleteFaculty')
+    .addEventListener('submit', deleteFaculty);
     
     document.getElementById('findById')
     .addEventListener('submit', findById);
 
 
-    function getGroups() {
-        fetch('http://localhost:8080/groups')
+    function getFaculties() {
+        fetch('http://localhost:8080/faculties')
         .then((res) => res.json())
         .then((data) => {
-          let groups = '<h5 style="font-size: 20px">Groups</h5>';
-          data.forEach(group => {
-             groups += `
+          let faculties = '<h5 style="font-size: 20px">Faculties</h5>';
+          data.forEach(faculty => {
+             faculties += `
              <ul>
-             <li>ID: ${group.id}</li>
-             <li>Name: ${group.name}</li>
-             <li>Faculty: ${group.faculty.name}</li>
+             <li>ID: ${faculty.id}</li>
+             <li>Name: ${faculty.name}</li>
              </ul>
              `;
           });
-          document.getElementById('groups').innerHTML = groups;
-          console.log(data);
+          document.getElementById('faculties').innerHTML = faculties;
         })
     }
     
-    function addGroup(e) {
+    function addFaculty(e) {
         e.preventDefault();
         let name = document.getElementById('name').value;
-        let facultyId = document.getElementById('facultyId').value;
-        let url = "http://localhost:8080/group/faculty/" + facultyId;
-        
-        fetch(url, {
+
+        fetch('http://localhost:8080/faculty', {
           method: 'POST',
           headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -109,14 +99,12 @@
           .then((data) => console.log(data))
       }
     
-    function updateGroup(e) {
+    function updateFaculty(e) {
     	e.preventDefault();
         let id = document.getElementById('idForUpdate').value;
         let name = document.getElementById('nameForUpdate').value;
-        let facultyId = document.getElementById('facultyIdForUpdate').value;
-        let url = "http://localhost:8080/group/faculty/" + facultyId;
 
-        fetch(url, {
+        fetch('http://localhost:8080/faculty', {
           method: 'PUT',
           headers: {
         	  'Accept': 'application/json, text/plain, */*',
@@ -131,27 +119,26 @@
     function findById(e) {
     	e.preventDefault();
     	let thisId = document.getElementById('idForSearch').value;
-    	let url = "http://localhost:8080/group/" + thisId;
+    	let url = "http://localhost:8080/faculty/" + thisId;
     	
     	fetch(url)
         .then((res) => res.json())
         .then((data) => {
         	console.log(data);
-        	document.getElementById('groupById').innerHTML = 
-        		`<br><h7 style="font-size: 20px"><b>Group:</b></h7>
+        	document.getElementById('facultyById').innerHTML = 
+        		`<br><h7 style="font-size: 20px"><b>Faculty:</b></h7>
                 <ul>
                 <li>ID: ${data.id}</li>
                 <li>Name: ${data.name}</li>
-                <li>Faculty: ${data.faculty.name}</li>
                 </ul>
                 `;
         })
     }
     
-    function deleteGroup(e) {
+    function deleteFaculty(e) {
     	e.preventDefault();
         let thisId = document.getElementById('idForDelete').value;
-        let url = "http://localhost:8080/group/" + thisId;
+        let url = "http://localhost:8080/faculty/" + thisId;
 
         fetch(url, {
           method: 'DELETE',

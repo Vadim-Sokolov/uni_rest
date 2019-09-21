@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rest.dao.FacultyDao;
 import com.rest.dao.GroupDao;
+import com.rest.model.Faculty;
 import com.rest.model.Group;
 import com.rest.model.Group;
 
@@ -24,16 +26,23 @@ public class GroupController {
 
 	@Autowired
 	private GroupDao groupDao;
+	
+	@Autowired
+	private FacultyDao facultyDao;
 
-	@PostMapping("/group")
+	@PostMapping("/group/faculty/{facultyId}")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Group addGroup(@RequestBody Group group) {
+	public Group addGroup(@RequestBody Group group, @PathVariable("facultyId") int facultyId) {
+		Faculty facultyToSet = facultyDao.findById(facultyId).get();
+		group.setFaculty(facultyToSet);
 		groupDao.save(group);
 		return group;
 	}
 
-	@PutMapping("/group")
-	public Group updateGroup(@RequestBody Group group) {
+	@PutMapping("/group/faculty/{facultyId}")
+	public Group updateGroup(@RequestBody Group group, @PathVariable("facultyId") int facultyId) {
+		Faculty facultyToSet = facultyDao.findById(facultyId).get();
+		group.setFaculty(facultyToSet);
 		groupDao.save(group);
 		return group;
 	}
