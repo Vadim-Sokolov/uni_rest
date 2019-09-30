@@ -111,7 +111,7 @@
         let lastName = document.getElementById('lastName').value;
         let cardNumber = document.getElementById('cardNumber').value;
         let groupId = document.getElementById('groupId').value;
-        let url = "http://localhost:8080/students/" + groupId;
+        let url = "http://localhost:8080/students/?group_id=" + groupId;
 
         fetch(url, {
           method: 'POST',
@@ -132,12 +132,12 @@
         let lastName = document.getElementById('lastNameForUpdate').value;
         let cardNumber = document.getElementById('cardNumberForUpdate').value;
         let groupId = document.getElementById('groupIdForUpdate').value;
-        let url = "http://localhost:8080/students/" + studentId + "/" + groupId;
+        let url = "http://localhost:8080/students/" + studentId + "/?group_id=" + groupId;
 
         fetch(url, {
           method: 'PUT',
           headers: {
-        	  'Accept': 'application/json, text/plain, */*',
+        	  'Accept': 'application/json, text/plain',
             'Content-type': 'application/json'
           },
           body: JSON.stringify({firstName: firstName, lastName: lastName, studentCardNumber: cardNumber })

@@ -96,7 +96,7 @@
         e.preventDefault();
         let name = document.getElementById('name').value;
         let facultyId = document.getElementById('facultyId').value;
-        let url = "http://localhost:8080/groups/" + facultyId;
+        let url = "http://localhost:8080/groups/?faculty_id=" + facultyId;
         
         fetch(url, {
           method: 'POST',
@@ -115,7 +115,7 @@
         let groupId = document.getElementById('idForUpdate').value;
         let name = document.getElementById('nameForUpdate').value;
         let facultyId = document.getElementById('facultyIdForUpdate').value;
-        let url = "http://localhost:8080/groups/" + groupId + "/" + facultyId;
+        let url = "http://localhost:8080/groups/" + groupId + "/?faculty_id=" + facultyId;
 
         fetch(url, {
           method: 'PUT',

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,17 +31,17 @@ public class GroupController {
 	@Autowired
 	private FacultyDao facultyDao;
 
-	@PostMapping("/groups/{facultyId}")
+	@PostMapping("/groups")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Group addGroup(@RequestBody Group group, @PathVariable("facultyId") int facultyId) {
+	public Group addGroup(@RequestBody Group group, @RequestParam("faculty_id") int facultyId) {
 		Faculty facultyToSet = facultyDao.findById(facultyId).get();
 		group.setFaculty(facultyToSet);
 		return groupDao.save(group);
 	}
 
-	@PutMapping("/groups/{groupId}/{facultyId}")
+	@PutMapping("/groups/{groupId}")
 	public Group updateGroup(@RequestBody Group group, @PathVariable("groupId") int groupId,
-			@PathVariable("facultyId") int facultyId) {
+			@RequestParam("faculty_id") int facultyId) {
 		group.setId(groupId);
 		Faculty facultyToSet = facultyDao.findById(facultyId).get();
 		group.setFaculty(facultyToSet);

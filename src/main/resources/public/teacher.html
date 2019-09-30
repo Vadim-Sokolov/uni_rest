@@ -103,7 +103,7 @@
         let firstName = document.getElementById('firstName').value;
         let lastName = document.getElementById('lastName').value;
         let facultyId = document.getElementById('facultyId').value;
-        let url = "http://localhost:8080/teachers/" + facultyId;
+        let url = "http://localhost:8080/teachers/?faculty_id=" + facultyId;
         
 
         fetch(url, {
@@ -124,7 +124,7 @@
         let firstName = document.getElementById('firstNameForUpdate').value;
         let lastName = document.getElementById('lastNameForUpdate').value;
         let facultyId = document.getElementById('facultyIdForUpdate').value;
-        let url = "http://localhost:8080/teachers/" + teacherId + "/" + facultyId;
+        let url = "http://localhost:8080/teachers/" + teacherId + "/?faculty_id=" + facultyId;
 
         fetch(url, {
           method: 'PUT',

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,16 +29,16 @@ public class StudentController {
 	@Autowired
 	private GroupDao groupDao;
 
-	@PostMapping("/students/{groupId}")
+	@PostMapping("/students")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Student addStudent(@RequestBody Student student, @PathVariable("groupId") int groupId) {
+	public Student addStudent(@RequestBody Student student, @RequestParam("group_id") int groupId) {
 		student.setGroup(groupDao.findById(groupId).get());
 		return studentDao.save(student);
 	}
 	
-	@PutMapping("/students/{studentId}/{groupId}") 
+	@PutMapping("/students/{studentId}") 
 	public Student updateStudent(@RequestBody Student student, 
-			@PathVariable("studentId") int studentId, @PathVariable("groupId") int groupId) {
+			@PathVariable("studentId") int studentId, @RequestParam("group_id") int groupId) {
 		student.setId(studentId);
 		student.setGroup(groupDao.findById(groupId).get());
 		return studentDao.save(student);
