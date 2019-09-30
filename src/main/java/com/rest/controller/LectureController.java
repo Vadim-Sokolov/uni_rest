@@ -21,6 +21,7 @@ import com.rest.dao.GroupDao;
 import com.rest.dao.LectureDao;
 import com.rest.dao.TeacherDao;
 import com.rest.model.Lecture;
+import com.rest.model.LectureDTO;
 
 @RestController
 public class LectureController {
@@ -36,29 +37,28 @@ public class LectureController {
 	@Autowired
 	private TeacherDao teacherDao;
 
-	@PostMapping("/lecture/auditorium/{auditoriumId}/course/{courseId}/group/{groupId}/teacher/{teacherId}")
+	@PostMapping("/lectures")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Lecture addLecture(@RequestBody Lecture lecture, @PathVariable("auditoriumId") int auditoriumId, 
-			@PathVariable("courseId") int courseId, @PathVariable("groupId") int groupId, 
-			@PathVariable("teacherId") int teacherId) {
-		lecture.setAuditorium(auditoriumDao.findById(auditoriumId).get());
-		lecture.setCourse(courseDao.findById(courseId).get());
-		lecture.setGroup(groupDao.findById(groupId).get());
-		lecture.setTeacher(teacherDao.findById(teacherId).get());
-		lectureDao.save(lecture);
-		return lecture;
+	public Lecture addLecture(@RequestBody LectureDTO lectureDTO) {
+		Lecture lectureToSave = new Lecture();
+		lectureToSave.setAuditorium(auditoriumDao.findById(lectureDTO.getAuditoriumId()).get());
+		lectureToSave.setCourse(courseDao.findById(lectureDTO.getCourseId()).get());
+		lectureToSave.setGroup(groupDao.findById(lectureDTO.getGroupId()).get());
+		lectureToSave.setTeacher(teacherDao.findById(lectureDTO.getTeacherId()).get());
+		lectureToSave.setTime(lectureDTO.getTime());
+		return lectureDao.save(lectureToSave);
 	}
 
-	@PutMapping("/lecture/auditorium/{auditoriumId}/course/{courseId}/group/{groupId}/teacher/{teacherId}")
-	public Lecture updateLecture(@RequestBody Lecture lecture, @PathVariable("auditoriumId") int auditoriumId, 
-			@PathVariable("courseId") int courseId, @PathVariable("groupId") int groupId, 
-			@PathVariable("teacherId") int teacherId) {
-		lecture.setAuditorium(auditoriumDao.findById(auditoriumId).get());
-		lecture.setCourse(courseDao.findById(courseId).get());
-		lecture.setGroup(groupDao.findById(groupId).get());
-		lecture.setTeacher(teacherDao.findById(teacherId).get());
-		lectureDao.save(lecture);
-		return lecture;
+	@PutMapping("/lectures/{id}")
+	public Lecture updateLecture(@RequestBody LectureDTO lectureDTO, @PathVariable("id") int id) {
+		Lecture lectureToSave = new Lecture();
+		lectureToSave.setId(id);
+		lectureToSave.setAuditorium(auditoriumDao.findById(lectureDTO.getAuditoriumId()).get());
+		lectureToSave.setCourse(courseDao.findById(lectureDTO.getCourseId()).get());
+		lectureToSave.setGroup(groupDao.findById(lectureDTO.getGroupId()).get());
+		lectureToSave.setTeacher(teacherDao.findById(lectureDTO.getTeacherId()).get());
+		lectureToSave.setTime(lectureDTO.getTime());
+		return lectureDao.save(lectureToSave);
 	}
 
 	@GetMapping("/lectures")
@@ -66,12 +66,12 @@ public class LectureController {
 		return lectureDao.findAll();
 	}
 
-	@GetMapping("/lecture/{id}")
+	@GetMapping("/lectures/{id}")
 	public Optional<Lecture> getLecture(@PathVariable("id") int id) {
 		return lectureDao.findById(id);
 	}
 
-	@DeleteMapping("/lecture/{id}")
+	@DeleteMapping("/lectures/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public String deleteLecture(@PathVariable("id") int id) {
 		Lecture lecture = lectureDao.getOne(id);

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 <title>fetch</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -12,7 +13,7 @@
 	<hr>
 	<div id="groups"></div>
 
-	<h1 style="font-size: 20px">CREATE</h1>
+	<h1>CREATE</h1>
 	<form id="addGroup">
 		<div>
 			<input type="text" id="name" placeholder="Name">
@@ -23,7 +24,7 @@
 		<input type="submit" value="Submit">
 	</form>
 
-	<h2 style="font-size: 20px">UPDATE</h2>
+	<h2>UPDATE</h2>
 	<form id="updateGroup">
 		<div>
 			<input type="text" id="idForUpdate" placeholder="ID">
@@ -37,7 +38,7 @@
 		<input type="submit" value="Submit">
 	</form>
 
-	<h3 style="font-size: 20px">FIND BY ID</h3>
+	<h3>FIND BY ID</h3>
 	<form id="findById">
 		<div>
 			<input type="number" id="idForSearch" placeholder="ID">
@@ -46,7 +47,7 @@
 	</form>
 	<div id="groupById"></div>
 
-	<h4 style="font-size: 20px">DELETE</h4>
+	<h4>DELETE</h4>
 	<hr>
 	<form id="deleteGroup">
 		<div>
@@ -76,7 +77,7 @@
         fetch('http://localhost:8080/groups')
         .then((res) => res.json())
         .then((data) => {
-          let groups = '<h5 style="font-size: 20px">Groups</h5>';
+          let groups = '<h5>Groups</h5>';
           data.forEach(group => {
              groups += `
              <ul>
@@ -95,7 +96,7 @@
         e.preventDefault();
         let name = document.getElementById('name').value;
         let facultyId = document.getElementById('facultyId').value;
-        let url = "http://localhost:8080/group/faculty/" + facultyId;
+        let url = "http://localhost:8080/groups/" + facultyId;
         
         fetch(url, {
           method: 'POST',
@@ -111,10 +112,10 @@
     
     function updateGroup(e) {
     	e.preventDefault();
-        let id = document.getElementById('idForUpdate').value;
+        let groupId = document.getElementById('idForUpdate').value;
         let name = document.getElementById('nameForUpdate').value;
         let facultyId = document.getElementById('facultyIdForUpdate').value;
-        let url = "http://localhost:8080/group/faculty/" + facultyId;
+        let url = "http://localhost:8080/groups/" + groupId + "/" + facultyId;
 
         fetch(url, {
           method: 'PUT',
@@ -122,7 +123,7 @@
         	  'Accept': 'application/json, text/plain, */*',
             'Content-type': 'application/json'
           },
-          body: JSON.stringify({id: id, name: name })
+          body: JSON.stringify({ name: name })
         })
           .then((res) => res.json())
           .then((data) => console.log(data))
@@ -131,14 +132,14 @@
     function findById(e) {
     	e.preventDefault();
     	let thisId = document.getElementById('idForSearch').value;
-    	let url = "http://localhost:8080/group/" + thisId;
+    	let url = "http://localhost:8080/groups/" + thisId;
     	
     	fetch(url)
         .then((res) => res.json())
         .then((data) => {
         	console.log(data);
         	document.getElementById('groupById').innerHTML = 
-        		`<br><h7 style="font-size: 20px"><b>Group:</b></h7>
+        		`<br><h6>Group:</h6>
                 <ul>
                 <li>ID: ${data.id}</li>
                 <li>Name: ${data.name}</li>
@@ -151,7 +152,7 @@
     function deleteGroup(e) {
     	e.preventDefault();
         let thisId = document.getElementById('idForDelete').value;
-        let url = "http://localhost:8080/group/" + thisId;
+        let url = "http://localhost:8080/groups/" + thisId;
 
         fetch(url, {
           method: 'DELETE',

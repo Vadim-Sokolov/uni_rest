@@ -5,16 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 <title>fetch</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 	<button id="getCourses">Get Courses</button>
 	<hr>
 	<div id="courses"></div>
-	<div id="courseById"></div>
-	
-
-	<h1 style="font-size: 20px">CREATE</h1>
+	<h1>CREATE</h1>
 	<form id="addCourse">
 		<div>
 			<input type="text" id="name" placeholder="Name">
@@ -28,7 +26,7 @@
 		<input type="submit" value="Submit">
 	</form>
 
-	<h2 style="font-size: 20px">UPDATE</h2>
+	<h2>UPDATE</h2>
 	<form id="updateCourse">
 		<div>
 			<input type="text" id="idForUpdate" placeholder="ID">
@@ -45,15 +43,16 @@
 		<input type="submit" value="Submit">
 	</form>
 
-	<h3 style="font-size: 20px">FIND BY ID</h3>
+	<h3>FIND BY ID</h3>
 	<form id="findById">
 		<div>
 			<input type="number" id="idForSearch" placeholder="ID">
 		</div>
 		<input type="submit" value="Submit">
 	</form>
+	<div id="courseById"></div>
 
-	<h4 style="font-size: 20px">DELETE</h4>
+	<h4>DELETE</h4>
 	<form id="deleteCourse">
 		<div>
 			<input type="number" id="idForDelete" placeholder="ID">
@@ -82,7 +81,7 @@
         fetch('http://localhost:8080/courses')
         .then((res) => res.json())
         .then((data) => {
-          let courses = '<h5 style="font-size: 20px">Courses</h5>';
+          let courses = '<h5>Courses</h5>';
           data.forEach(course => {
              courses += `
              <ul>
@@ -103,7 +102,7 @@
         let numberOfWeeks = document.getElementById('numberOfWeeks').value;
         let description = document.getElementById('description').value;
 
-        fetch('http://localhost:8080/course', {
+        fetch('http://localhost:8080/courses', {
           method: 'POST',
           headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -117,18 +116,19 @@
     
     function updateCourse(e) {
     	e.preventDefault();
-        let id = document.getElementById('idForUpdate').value;
+        let thisId = document.getElementById('idForUpdate').value;
         let name = document.getElementById('nameForUpdate').value;
         let numberOfWeeks = document.getElementById('weeksForUpdate').value;
         let description = document.getElementById('descriptionForUpdate').value;
+        let url = "http://localhost:8080/courses/" + thisId;
 
-        fetch('http://localhost:8080/course', {
+        fetch(url, {
           method: 'PUT',
           headers: {
         	  'Accept': 'application/json, text/plain, */*',
             'Content-type': 'application/json'
           },
-          body: JSON.stringify({id: id, name: name, numberOfWeeks: numberOfWeeks, description: description })
+          body: JSON.stringify({name: name, numberOfWeeks: numberOfWeeks, description: description })
         })
           .then((res) => res.json())
           .then((data) => console.log(data))
@@ -137,14 +137,14 @@
     function findById(e) {
     	e.preventDefault();
     	let thisId = document.getElementById('idForSearch').value;
-    	let url = "http://localhost:8080/course/" + thisId;
+    	let url = "http://localhost:8080/courses/" + thisId;
     	
     	fetch(url)
         .then((res) => res.json())
         .then((data) => {
         	console.log(data);
         	document.getElementById('courseById').innerHTML = 
-        		`
+        		`<br><h6>Course:</h6>
                 <ul>
                 <li>ID: ${data.id}</li>
                 <li>Name: ${data.name}</li>
@@ -158,7 +158,7 @@
     function deleteCourse(e) {
     	e.preventDefault();
         let thisId = document.getElementById('idForDelete').value;
-        let url = "http://localhost:8080/course/" + thisId;
+        let url = "http://localhost:8080/courses/" + thisId;
 
         fetch(url, {
           method: 'DELETE',

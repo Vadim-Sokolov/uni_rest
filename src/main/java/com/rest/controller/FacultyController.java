@@ -24,15 +24,16 @@ public class FacultyController {
 	@Autowired
 	private FacultyDao facultyDao;
 
-	@PostMapping("/faculty")
+	@PostMapping("/faculties")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Faculty addFaculty(@RequestBody Faculty faculty) {
 		facultyDao.save(faculty);
 		return faculty;
 	}
 
-	@PutMapping("/faculty")
-	public Faculty updateFaculty(@RequestBody Faculty faculty) {
+	@PutMapping("/faculties/{id}")
+	public Faculty updateFaculty(@RequestBody Faculty faculty, @PathVariable("id") int id) {
+		faculty.setId(id);
 		facultyDao.save(faculty);
 		return faculty;
 	}
@@ -42,12 +43,12 @@ public class FacultyController {
 		return facultyDao.findAll();
 	}
 
-	@GetMapping("/faculty/{id}")
+	@GetMapping("/faculties/{id}")
 	public Optional<Faculty> getFaculty(@PathVariable("id") int id) {
 		return facultyDao.findById(id);
 	}
 
-	@DeleteMapping("/faculty/{id}")
+	@DeleteMapping("/faculties/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public String deleteFaculty(@PathVariable("id") int id) {
 		Faculty faculty = facultyDao.getOne(id);

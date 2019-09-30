@@ -28,21 +28,19 @@ public class StudentController {
 	@Autowired
 	private GroupDao groupDao;
 
-	@PostMapping("/student/group/{groupId}")
+	@PostMapping("/students/{groupId}")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Student addStudent(@RequestBody Student student, @PathVariable("groupId") int groupId) {
 		student.setGroup(groupDao.findById(groupId).get());
-		studentDao.save(student);
-		return student;
+		return studentDao.save(student);
 	}
 	
-	@PutMapping("/student/{studentId}/group/{groupId}") 
+	@PutMapping("/students/{studentId}/{groupId}") 
 	public Student updateStudent(@RequestBody Student student, 
 			@PathVariable("studentId") int studentId, @PathVariable("groupId") int groupId) {
 		student.setId(studentId);
 		student.setGroup(groupDao.findById(groupId).get());
-		studentDao.save(student);
-		return student;
+		return studentDao.save(student);
 	}
 
 	@GetMapping("/students")
@@ -50,12 +48,12 @@ public class StudentController {
 		return studentDao.findAll();
 	}
 
-	@GetMapping("/student/{id}")
+	@GetMapping("/students/{id}")
 	public Optional<Student> getStudent(@PathVariable("id") int id) {
 		return studentDao.findById(id);
 	}
 
-	@DeleteMapping("/student/{id}")
+	@DeleteMapping("/students/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public String deleteStudent(@PathVariable("id") int id) {
 		Student student = studentDao.getOne(id);

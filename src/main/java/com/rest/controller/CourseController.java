@@ -24,15 +24,16 @@ public class CourseController {
 	@Autowired
 	private CourseDao courseDao;
 	
-	@PostMapping("/course")
+	@PostMapping("/courses")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Course addCourse(@RequestBody Course course) {
 		courseDao.save(course);
 		return course;
 	}
 	
-	@PutMapping("/course") 
-	public Course updateCourse(@RequestBody Course course) {
+	@PutMapping("/courses/{id}") 
+	public Course updateCourse(@RequestBody Course course, @PathVariable("id") int id) {
+		course.setId(id);
 		courseDao.save(course);
 		return course;
 	}
@@ -42,12 +43,12 @@ public class CourseController {
 		return courseDao.findAll();
 	}
 
-	@GetMapping("/course/{id}")
+	@GetMapping("/courses/{id}")
 	public Optional<Course> getCourse(@PathVariable("id") int id) {
 		return courseDao.findById(id);
 	}
 
-	@DeleteMapping("/course/{id}")
+	@DeleteMapping("/courses/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public String deleteCourse(@PathVariable("id") int id) {
 		Course course = courseDao.getOne(id);

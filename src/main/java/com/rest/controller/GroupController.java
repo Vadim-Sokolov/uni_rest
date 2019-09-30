@@ -30,21 +30,21 @@ public class GroupController {
 	@Autowired
 	private FacultyDao facultyDao;
 
-	@PostMapping("/group/faculty/{facultyId}")
+	@PostMapping("/groups/{facultyId}")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Group addGroup(@RequestBody Group group, @PathVariable("facultyId") int facultyId) {
 		Faculty facultyToSet = facultyDao.findById(facultyId).get();
 		group.setFaculty(facultyToSet);
-		groupDao.save(group);
-		return group;
+		return groupDao.save(group);
 	}
 
-	@PutMapping("/group/faculty/{facultyId}")
-	public Group updateGroup(@RequestBody Group group, @PathVariable("facultyId") int facultyId) {
+	@PutMapping("/groups/{groupId}/{facultyId}")
+	public Group updateGroup(@RequestBody Group group, @PathVariable("groupId") int groupId,
+			@PathVariable("facultyId") int facultyId) {
+		group.setId(groupId);
 		Faculty facultyToSet = facultyDao.findById(facultyId).get();
 		group.setFaculty(facultyToSet);
-		groupDao.save(group);
-		return group;
+		return groupDao.save(group);
 	}
 
 	@GetMapping("/groups")
@@ -52,12 +52,12 @@ public class GroupController {
 		return groupDao.findAll();
 	}
 
-	@GetMapping("/group/{id}")
+	@GetMapping("/groups/{id}")
 	public Optional<Group> getGroup(@PathVariable("id") int id) {
 		return groupDao.findById(id);
 	}
 
-	@DeleteMapping("/group/{id}")
+	@DeleteMapping("/groups/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public String deleteGroup(@PathVariable("id") int id) {
 		Group group = groupDao.getOne(id);

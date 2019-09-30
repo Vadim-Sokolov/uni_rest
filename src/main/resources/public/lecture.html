@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 <title>fetch</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -12,7 +13,7 @@
 	<hr>
 	<div id="lectures"></div>
 
-	<h1 style="font-size: 20px">CREATE</h1>
+	<h1>CREATE</h1>
 	<form id="addLecture">
 		<div>
 			<input type="text" id="courseId" placeholder="Course ID">
@@ -42,7 +43,7 @@
 		<input type="submit" value="Submit">
 	</form>
 
-	<h2 style="font-size: 20px">UPDATE</h2>
+	<h2>UPDATE</h2>
 	<form id="updateLecture">
 		<div>
 			<input type="text" id="idForUpdate" placeholder="ID">
@@ -75,7 +76,7 @@
 		<input type="submit" value="Submit">
 	</form>
 
-	<h3 style="font-size: 20px">FIND BY ID</h3>
+	<h3>FIND BY ID</h3>
 	<form id="findById">
 		<div>
 			<input type="number" id="idForSearch" placeholder="ID">
@@ -84,7 +85,7 @@
 	</form>
 	<div id="lectureById"></div>
 
-	<h4 style="font-size: 20px">DELETE</h4>
+	<h4>DELETE</h4>
 	<hr>
 	<form id="deleteLecture">
 		<div>
@@ -114,7 +115,7 @@
         fetch('http://localhost:8080/lectures')
         .then((res) => res.json())
         .then((data) => {
-          let lectures = '<h5 style="font-size: 20px">Lectures</h5>';
+          let lectures = '<h5>Lectures</h5>';
           data.forEach(lecture => {
              lectures += `
              <ul>
@@ -139,16 +140,15 @@
         let groupId = document.getElementById('groupId').value;
         let teacherId = document.getElementById('teacherId').value;
         let time = document.getElementById('time').value;
-        let url = "http://localhost:8080/lecture/auditorium/" + auditoriumId + "/course/" + courseId
-        + "/group/" + groupId + "/teacher/" + teacherId;
+        let url = "http://localhost:8080/lectures";
 
         fetch(url, {
           method: 'POST',
           headers: {
-            'Accept': 'application/json, text/plain, */*',
+            'Accept': 'application/json, text/plain',
             'Content-type': 'application/json'
           },
-          body: JSON.stringify({ time: time })
+          body: JSON.stringify({ auditoriumId: auditoriumId, courseId: courseId, groupId: groupId, teacherId: teacherId, time: time })
         })
           .then((res) => res.json())
           .then((data) => console.log(data))
@@ -156,14 +156,13 @@
     
     function updateLecture(e) {
     	e.preventDefault();
-        let id = document.getElementById('idForUpdate').value;
+        let thisId = document.getElementById('idForUpdate').value;
         let auditoriumId = document.getElementById('auditoriumIdForUpdate').value;
         let courseId = document.getElementById('courseIdForUpdate').value;
         let groupId = document.getElementById('groupIdForUpdate').value;
         let teacherId = document.getElementById('teacherIdForUpdate').value;
         let time = document.getElementById('timeForUpdate').value;
-        let url = "http://localhost:8080/lecture/auditorium/" + auditoriumId + "/course/" + courseId
-        + "/group/" + groupId + "/teacher/" + teacherId;
+        let url = "http://localhost:8080/lectures/" + thisId;
 
         fetch(url, {
           method: 'PUT',
@@ -171,7 +170,7 @@
         	  'Accept': 'application/json, text/plain, */*',
             'Content-type': 'application/json'
           },
-          body: JSON.stringify({id: id, time: time })
+          body: JSON.stringify({auditoriumId: auditoriumId, courseId: courseId, groupId: groupId, teacherId: teacherId, time: time })
         })
           .then((res) => res.json())
           .then((data) => console.log(data))
@@ -180,14 +179,14 @@
     function findById(e) {
     	e.preventDefault();
     	let thisId = document.getElementById('idForSearch').value;
-    	let url = "http://localhost:8080/lecture/" + thisId;
+    	let url = "http://localhost:8080/lectures/" + thisId;
     	
     	fetch(url)
         .then((res) => res.json())
         .then((data) => {
         	console.log(data);
         	document.getElementById('lectureById').innerHTML = 
-        		`<br><h7 style="font-size: 20px"><b>Lecture:</b></h7>
+        		`<br><h6>Lecture:</h6>
                 <ul>
                 <li>ID: ${data.id}</li>
                 <li>Auditorium: ${data.auditorium.name}</li>
@@ -203,7 +202,7 @@
     function deleteLecture(e) {
     	e.preventDefault();
         let thisId = document.getElementById('idForDelete').value;
-        let url = "http://localhost:8080/lecture/" + thisId;
+        let url = "http://localhost:8080/lectures/" + thisId;
 
         fetch(url, {
           method: 'DELETE',

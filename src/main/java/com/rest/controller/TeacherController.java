@@ -27,21 +27,19 @@ public class TeacherController {
 	@Autowired
 	private FacultyDao facultyDao; 
 
-	@PostMapping("/teacher/faculty/{facultyId}")
+	@PostMapping("/teachers/{facultyId}")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Teacher addTeacher(@RequestBody Teacher teacher, @PathVariable("facultyId") int facultyId) {
 		teacher.setFaculty(facultyDao.findById(facultyId).get());
-		teacherDao.save(teacher);
-		return teacher;
+		return teacherDao.save(teacher);
 	}
 
-	@PutMapping("/teacher/{teacherId}/faculty/{facultyId}")
+	@PutMapping("/teachers/{teacherId}/{facultyId}")
 	public Teacher updateTeacher(@RequestBody Teacher teacher,
 			@PathVariable("teacherId") int teacherId, @PathVariable("facultyId") int facultyId) {
 		teacher.setId(teacherId);
 		teacher.setFaculty(facultyDao.findById(facultyId).get());
-		teacherDao.save(teacher);
-		return teacher;
+		return teacherDao.save(teacher);
 	}
 
 	@GetMapping("/teachers")
@@ -49,12 +47,12 @@ public class TeacherController {
 		return teacherDao.findAll();
 	}
 
-	@GetMapping("/teacher/{id}")
+	@GetMapping("/teachers/{id}")
 	public Optional<Teacher> getTeacher(@PathVariable("id") int id) {
 		return teacherDao.findById(id);
 	}
 
-	@DeleteMapping("/teacher/{id}")
+	@DeleteMapping("/teachers/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public String deleteTeacher(@PathVariable("id") int id) {
 		Teacher teacher = teacherDao.getOne(id);

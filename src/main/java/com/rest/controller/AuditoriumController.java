@@ -24,15 +24,16 @@ public class AuditoriumController {
 	@Autowired
 	private AuditoriumDao auditoriumDao;
 	
-	@PostMapping("/auditorium")
+	@PostMapping("/auditoriums")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Auditorium addAuditorium(@RequestBody Auditorium auditorium) {
-		auditoriumDao.save(auditorium);
-		return auditorium;
+		return auditoriumDao.save(auditorium);
+		//return auditorium;
 	}
 	
-	@PutMapping("/auditorium") 
-	public Auditorium updateAuditorium(@RequestBody Auditorium auditorium) {
+	@PutMapping("/auditoriums/{id}") 
+	public Auditorium updateAuditorium(@RequestBody Auditorium auditorium, @PathVariable("id") int id) {
+		auditorium.setId(id);
 		auditoriumDao.save(auditorium);
 		return auditorium;
 	}
@@ -42,12 +43,12 @@ public class AuditoriumController {
 		return auditoriumDao.findAll();
 	}
 
-	@GetMapping("/auditorium/{id}")
+	@GetMapping("/auditoriums/{id}")
 	public Optional<Auditorium> getAuditorium(@PathVariable("id") int id) {
 		return auditoriumDao.findById(id);
 	}
 
-	@DeleteMapping("/auditorium/{id}")
+	@DeleteMapping("/auditoriums/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public String deleteAuditorium(@PathVariable("id") int id) {
 		Auditorium auditorium = auditoriumDao.getOne(id);

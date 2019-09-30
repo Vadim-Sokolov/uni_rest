@@ -5,16 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 <title>fetch</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 	<button id="getAuditoriums">Get Auditoriums</button>
 	<hr>
-	<div id="auditoriums"></div>
-	<div id="auditoriumById"></div>
-	
+	<div id="auditoriums"></div>	
 
-	<h1 style="font-size: 20px">CREATE</h1>
+	<h1>CREATE</h1>
 	<form id="addAuditorium">
 		<div>
 			<input type="text" id="name" placeholder="Name">
@@ -25,7 +24,7 @@
 		<input type="submit" value="Submit">
 	</form>
 
-	<h2 style="font-size: 20px">UPDATE</h2>
+	<h2>UPDATE</h2>
 	<form id="updateAuditorium">
 		<div>
 			<input type="text" id="idForUpdate" placeholder="ID">
@@ -39,15 +38,16 @@
 		<input type="submit" value="Submit">
 	</form>
 
-	<h3 style="font-size: 20px">FIND BY ID</h3>
+	<h3>FIND BY ID</h3>
 	<form id="findById">
 		<div>
 			<input type="number" id="idForSearch" placeholder="ID">
 		</div>
 		<input type="submit" value="Submit">
 	</form>
+	<div id="auditoriumById"></div>
 
-	<h4 style="font-size: 20px">DELETE</h4>
+	<h4>DELETE</h4>
 	<form id="deleteAuditorium">
 		<div>
 			<input type="number" id="idForDelete" placeholder="ID">
@@ -76,7 +76,7 @@
         fetch('http://localhost:8080/auditoriums')
         .then((res) => res.json())
         .then((data) => {
-          let auditoriums = '<h5 style="font-size: 20px">Auditoriums</h5>';
+          let auditoriums = '<h5>Auditoriums</h5>';
           data.forEach(auditorium => {
              auditoriums += `
              <ul>
@@ -95,7 +95,7 @@
         let name = document.getElementById('name').value;
         let capacity = document.getElementById('capacity').value;
 
-        fetch('http://localhost:8080/auditorium', {
+        fetch('http://localhost:8080/auditoriums', {
           method: 'POST',
           headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -112,14 +112,15 @@
         let thisId = document.getElementById('idForUpdate').value;
         let thisName = document.getElementById('nameForUpdate').value;
         let thisCapacity = document.getElementById('capacityForUpdate').value;
+        let url = "http://localhost:8080/auditoriums/" + thisId;
 
-        fetch('http://localhost:8080/auditorium', {
+        fetch(url, {
           method: 'PUT',
           headers: {
         	  'Accept': 'application/json, text/plain, */*',
             'Content-type': 'application/json'
           },
-          body: JSON.stringify({id: thisId, name: thisName, capacity: thisCapacity })
+          body: JSON.stringify({name: thisName, capacity: thisCapacity })
         })
           .then((res) => res.json())
           .then((data) => console.log(data))
@@ -130,20 +131,27 @@
     function findById(e) {
     	e.preventDefault();
     	let thisId = document.getElementById('idForSearch').value;
-    	let url = "http://localhost:8080/auditorium/" + thisId;
+    	let url = "http://localhost:8080/auditoriums/" + thisId;
     	
     	fetch(url)
         .then((res) => res.json())
         .then((data) => {
         	console.log(data);
-        	document.getElementById('auditoriumById').innerHTML = "Auditorium: [ID: " + data.id + ", Name: " + data.name + ", Capacity: " + data. capacity +"]";
+        	document.getElementById('auditoriumById').innerHTML = 
+        		`<br><h6>Auditorium:</h6>
+                <ul>
+                <li>ID: ${data.id}</li>
+                <li>Name: ${data.name}</li>
+                <li>Faculty: ${data.capacity}</li>
+                </ul>
+                `;
         })
     }
     
     function deleteAuditorium(e) {
     	e.preventDefault();
         let thisId = document.getElementById('idForDelete').value;
-        let url = "http://localhost:8080/auditorium/" + thisId;
+        let url = "http://localhost:8080/auditoriums/" + thisId;
 
         fetch(url, {
           method: 'DELETE',
